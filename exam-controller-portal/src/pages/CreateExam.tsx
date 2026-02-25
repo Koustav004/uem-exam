@@ -12,6 +12,7 @@ export default function CreateExam() {
   // Exam Form State
   const [formData, setFormData] = useState({
     name: '',
+    code:'',
     details: '',
     date: '',
     duration: '',
@@ -66,7 +67,7 @@ export default function CreateExam() {
     const newExam = {
       id: Date.now().toString(),
       name: formData.name,
-      code: `EX-${Math.floor(Math.random() * 1000)}`, // Auto-generate code
+      code: <formData className="code"></formData>, // Auto-generate code
       details: formData.details,
       date: formData.date,
       duration: formData.duration,
@@ -283,8 +284,8 @@ export default function CreateExam() {
                     <th className="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Student Name</th>
                     <th className="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Roll No</th>
                     <th className="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Dept</th>
-                    <th className="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Year</th>
                     <th className="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Section</th>
+                    <th className="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Year</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -306,8 +307,8 @@ export default function CreateExam() {
                         <td className="p-4 font-bold text-gray-800">{student.name}</td>
                         <td className="p-4 font-mono text-sm text-gray-600">{student.rollNo}</td>
                         <td className="p-4 text-sm text-gray-600">{student.department}</td>
-                        <td className="p-4 text-sm text-gray-600">{student.year || '-'}</td>
                         <td className="p-4 text-sm text-gray-600">{student.section}</td>
+                        <td className="p-4 text-sm text-gray-600">{student.year || '-'}</td>
                       </tr>
                     ))
                   ) : (
