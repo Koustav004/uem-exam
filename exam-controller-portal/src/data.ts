@@ -5,8 +5,6 @@ export interface Exam {
   details: string;
   date: string;
   duration: string;
-  totalMarks: number;
-  questionCount: number;
   url: string;
   status: 'Scheduled' | 'Active' | 'Completed';
 }
@@ -32,8 +30,6 @@ export const mockExams: Exam[] = [
     details: 'Comprehensive test on Arrays, Linked Lists, and Trees.', 
     date: '2023-10-27', 
     duration: '60', 
-    totalMarks: 50,
-    questionCount: 25,
     url: 'https://exam.uem.edu.in/cs301-mid',
     status: 'Scheduled' 
   },
@@ -44,8 +40,6 @@ export const mockExams: Exam[] = [
     details: 'Final exam covering processes, memory management, and file systems.', 
     date: '2023-10-28', 
     duration: '90', 
-    totalMarks: 100,
-    questionCount: 40,
     url: 'https://exam.uem.edu.in/cs402-final',
     status: 'Active' 
   },
@@ -56,8 +50,6 @@ export const mockExams: Exam[] = [
     details: 'SQL, Normalization, and Transaction Management.', 
     date: '2023-10-29', 
     duration: '120', 
-    totalMarks: 75,
-    questionCount: 30,
     url: 'https://exam.uem.edu.in/cs305-dbms',
     status: 'Completed' 
   },

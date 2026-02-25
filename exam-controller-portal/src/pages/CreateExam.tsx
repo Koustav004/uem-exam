@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Save, ArrowLeft, Copy, Search, Filter, Check, X } from 'lucide-react';
 import { mockStudents, Student } from '../data';
 import { useExams } from '../context/ExamContext';
-import { api } from '../services/api'; // Import API service
+
 
 export default function CreateExam() {
   const navigate = useNavigate();
@@ -70,8 +70,6 @@ export default function CreateExam() {
       details: formData.details,
       date: formData.date,
       duration: formData.duration,
-      totalMarks: 100, // Default or add field
-      questionCount: 50, // Default or add field
       url: formData.url,
       status: 'Scheduled' as const,
     };

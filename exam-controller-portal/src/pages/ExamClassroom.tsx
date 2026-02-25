@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { mockStudents } from '../data';
+
 import { useExams } from '../context/ExamContext';
 import { ArrowLeft, Users, Play, Square, Edit3, Search, Filter, RefreshCw, Eye, X, Monitor, Clock } from 'lucide-react';
 import { api } from '../services/api'; // Import API service
@@ -15,7 +15,7 @@ export default function ExamClassroom() {
   const [timeLeft, setTimeLeft] = useState<number>(0);
   
   // Student Monitor State
-  const [students, setStudents] = useState(mockStudents);
+  const [students, setStudents] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
 
