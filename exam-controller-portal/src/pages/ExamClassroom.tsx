@@ -183,14 +183,6 @@ export default function ExamClassroom() {
                   <p className="text-xl font-black text-gray-800">{exam.duration} Mins</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Total Marks</h4>
-                  <p className="text-xl font-black text-gray-800">{exam.totalMarks}</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Questions</h4>
-                  <p className="text-xl font-black text-gray-800">{exam.questionCount}</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
                   <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Status</h4>
                   <p className={`text-xl font-black ${isActive ? 'text-green-600' : 'text-gray-800'}`}>
                     {exam.status}
@@ -349,7 +341,7 @@ export default function ExamClassroom() {
                   <Monitor size={20} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-gray-900">Live Screen Monitor</h3>
+                  <h3 className="font-bold text-lg text-gray-900">Screen Monitor</h3>
                   <p className="text-xs text-gray-500">Viewing Student ID: {selectedStudentId}</p>
                 </div>
               </div>
@@ -363,17 +355,8 @@ export default function ExamClassroom() {
                 alt="Screen" 
                 className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" 
                />
-               <div className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs font-mono backdrop-blur-sm">
-                 LIVE • 1080p
-               </div>
             </div>
             <div className="p-4 bg-gray-50 flex justify-end gap-2">
-              <button className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-100">
-                Take Screenshot
-              </button>
-              <button className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-red-700">
-                Flag Suspicious
-              </button>
             </div>
           </div>
         </div>
