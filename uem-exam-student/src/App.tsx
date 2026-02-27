@@ -1,15 +1,13 @@
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import { motion } from 'motion/react';
-import assert from 'assert';
-import { Search, LogOut, User, Monitor, FileText, Plus, ArrowLeft } from 'lucide-react';
+import {BrowserRouter, Routes, Route, Link, useNavigate} from 'react-router-dom';
+import React, {useState} from 'react';
+import {motion} from 'motion/react';
+import {ArrowLeft} from 'lucide-react';
+import axios from 'axios';
 
-// Utility for tailwind classes
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import {getProfile, loginUser, type StudentProfileResponse} from './services/authApi';
+
+import uemLogo from './assets/UEM.png';
+import iemLogo from './assets/IEM.png';
 
 
 
@@ -18,7 +16,7 @@ function Header() {
     <header className="bg-white py-4 px-4 md:px-8 flex justify-between items-center shadow-md z-20 relative border-b-4 border-red-600 min-h-[100px]">
       {/* Left Logo */}
       <div className="flex-shrink-0 z-10">
-        <img src="src\assets\UEM.png" alt="UEM Logo" className="h-10 md:h-15 object-contain" referrerPolicy="no-referrer" />
+        <img src={uemLogo} alt="UEM Logo" className="h-10 md:h-15 object-contain" referrerPolicy="no-referrer" />
       </div>
 
       {/* Center Text - Absolute positioning to ensure true center */}
@@ -32,7 +30,7 @@ function Header() {
 
       {/* Right Logo */}
       <div className="flex-shrink-0 z-10">
-        <img src="src\assets\IEM.png" alt="IEM Logo" className="h-26 md:h-30 object-contain" referrerPolicy="no-referrer" />
+        <img src={iemLogo} alt="IEM Logo" className="h-26 md:h-30 object-contain" referrerPolicy="no-referrer" />
       </div>
     </header>
   );
@@ -49,45 +47,85 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Pages
+// function Test() {
+//   const [apiResult, setApiResult] = useState<unknown>(null);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState("");
 
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+//   const handleShow = async () => {
+//     setLoading(true);
+//     setError("");
+
+//     try {
+//       const response = await api.post('/login', {});
+
+//       setApiResult(response.data); // store result
+//     } catch (err) {
+//       console.error("API Error:", err);
+//       setError("Something went wrong!");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="p-5">
+//       <button
+//         onClick={handleShow}
+//         disabled={loading}
+//         className="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition hover:scale-105 active:scale-95 mt-4"
+//       >
+//         {loading ? "VERIFYING..." : "SHOW"}
+//       </button>
+
+//       {/* Show API Result */}
+//       {apiResult && (
+//         <pre className="mt-4 p-3 bg-gray-200 rounded">
+//           {JSON.stringify(apiResult, null, 2)}
+//         </pre>
+//       )}
+
+//       {/* Show Error */}
+//       {error && (
+//         <p className="text-red-600 font-semibold mt-3">{error}</p>
+//       )}
+//     </div>
+//   );
+// }
 
 
+
+//login page
 function LoginPage() {
-  const navigate = useNavigate();
-
-  const [id, setId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [profile, setProfile] = useState<StudentProfileResponse | null>(null);
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
+    setProfile(null);
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://api.example.com/login/verify", 
-        {
-          id: id,
-          password: password,
-        }
-      );
+      await loginUser(email, password);
 
-  
-      if (response.status === 200) {
-     
-        localStorage.setItem("token", response.data.token);
-
-        navigate("/student"); 
-      }
+      const profileResponse = await getProfile();
+      setProfile(profileResponse);
+      setSuccess('Login successful. Session cookie set.');
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Invalid ID or Password"
-      );
+      console.error('Login Error:', err);
+
+      if (axios.isAxiosError(err)) {
+        const message = (err.response?.data as any)?.message;
+        setError(message || 'Login failed. Please check your credentials.');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -114,9 +152,9 @@ function LoginPage() {
 
             <input
               type="text"
-              placeholder="ID"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full bg-white/80 border-none rounded-lg py-3 px-4 text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-blue-800 outline-none transition-all shadow-inner font-bold"
             />
@@ -134,6 +172,10 @@ function LoginPage() {
               <p className="text-red-700 font-semibold text-sm">{error}</p>
             )}
 
+            {success && (
+              <p className="text-green-800 font-semibold text-sm">{success}</p>
+            )}
+
             <button
               type="submit"
               disabled={loading}
@@ -148,12 +190,18 @@ function LoginPage() {
         <div className="flex-1 bg-white p-8 md:p-12 flex items-center justify-center">
           <div className="text-center">
             <img
-              src="src/assets/UEM.png"
+              src={uemLogo}
               alt="UEM Logo"
               className="w-32 md:w-48 mx-auto mb-4"
             />
             <p>This paper will decide your future.</p>
             <p>GOOD LUCK BUDDIES</p>
+
+            {profile && (
+              <pre className="mt-6 p-3 bg-gray-100 rounded text-left text-xs overflow-auto max-h-64">
+                {JSON.stringify(profile, null, 2)}
+              </pre>
+            )}
           </div>
         </div>
       </motion.div>
@@ -252,6 +300,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/student" element={<StudentLoginPage />} />
+          {/* <Route path="/test" element={<Test />} /> */}
         </Routes>
       </Layout>
     </BrowserRouter>
